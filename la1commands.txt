@@ -1,0 +1,162 @@
+EDA project
+La1
+Group project
+Khushi Verma-1NT18IS081
+TN Namitha Shree-1NT18IS171
+
+Commands
+#package installing
+install.packages("tidyverse")
+library(tidyverse)
+
+install.packages("caret")
+library(caret)
+
+install.packages("RCurl")
+library(RCurl)
+
+install.packages("skimr")
+library(skimr)
+
+#importing data
+data <- read.csv("vaccine.csv")
+
+#view data
+head(data)
+tail(data)
+View(data)
+str(data)
+
+#extracting copmponents of dataframe
+data[1,2]
+data[,4]
+data$Country
+
+#dimenstion of dataset
+dim(data)
+
+#list the datatype of each attribute
+sapply(data,class)
+
+#check wheather there is null value
+sum(is.na(data))
+
+#sumarize
+summary(data)
+
+#displaying detailed summary statistics
+skim(data)
+
+#group data by index
+data %>%
+  dplyr::group_by(Country)%>%
+  skim()
+
+#create validation set
+validation <- createDataPartition(data$Country,p=0.50,list=FALSE)
+validation50 <-data[-validation,]
+
+data<-data[validation,]
+view(data)
+
+#input and output
+x<-data[,2:3]
+view(x)
+y<-data[,1]
+view(y)
+
+#plots
+boxplot(x[,2],main=names(data)[1],ylab="Total.doses.administered")
+boxplot(x[,1],main=names(data)[3],ylab="Country")
+
+#for all attribute
+par (mfrow=c(1,2))
+for(i in 1:2)
+{
+  boxplot(x[,i],main=names(data)[i])
+}
+
+library(caret)
+plot(x)
+
+#scatter plot
+library(caret)
+featurePlot(x=x,y=y)
+
+install.packages("ellipse")
+library(ellipse)
+library(caret)
+featurePlot(x=x,y=y,plot ="ellipse")
+
+
+#box plots
+library(caret)
+featurePlot(x=x,y=y,plot="box")
+
+
+#density plot
+scales<-list(x=list(relation="free"),y=list(relation="free"))
+
+scales<-list(x=list(relation="free"),y=list(relation="free"))
+featurePlot(x=x,y=y,plot = "density",scales=scales)
+
+
+#barplot
+counts<-table(data$Total.doses.administered)
+barplot(counts)
+barplot(counts,horiz=TRUE)
+barplot(counts,
+        main="Barplot",xlab="open",legend=rownames(counts),col=c("red","yellow","green"))
+
+#boxplot
+bwplot(~Country,data=data,main="boxplots")
+library("caret")
+
+#High
+bwplot(~Country|Total.doses.administered,data=data,main="boxplots")
+
+#hisogram
+install.packages("lattice")
+library(lattice)
+histogram(~Total.doses.administered,data = data,main="histogram")
+histogram(~Doses.administered.per.100.people,data = data,main="histogram")
+histogram(~Doses.administered.per.100.people,data = data,main="histogram")
+histogram(~X..of.population.vaccinated,data = data,main="histogram")
+
+#scatter
+xyplot(Total.doses.administered~Doses.administered.per.100.people,data=data,main="Scatterplot")
+xyplot(X..of.population.vaccinated~Doses.administered.per.100.people,data=data,main="Scatterplot")
+xyplot(X..of.population.fully.vaccinated~Doses.administered.per.100.people,data=data,main="Scatterplot")
+
+barchart(~Total.doses.administered,data=data,main="Barchart")
+barchart(~X..of.population.vaccinated,data=data,main="Barchart")
+barchart(~X..of.population.fully.vaccinated,data=data,main="Barchart")
+
+#densityplot
+densityplot(~Total.doses.administered,data=data)
+densityplot(~X..of.population.vaccinated,data=data)
+
+#piechart
+install.packages("plotrix")
+library(plotrix)
+slices<-c("Total.doses.administered")
+lbls<-c("X..of.population.vaccinated")
+pie(slices,labels=lbls,main="X..of.population.vaccinated")
+
+#ggplot
+library(ggplot2)
+library(grid)
+library(gridExtra)
+(plot1<-ggplot(data=data,mapping=aes(x=Total.doses.administered,y=X..of.population.vaccinated))+geom_boxplot())
+(plot2<-ggplot(data=data,mapping=aes(x=Total.doses.administered,y=X..of.population.fully.vaccinated))+geom_boxplot())
+
+ggplot(data=data,mapping=aes(x=Total.doses.administered,y=X..of.population.vaccinated))+geom_boxplot(notch = TRUE,outlier.colour = "red",outlier.size = 3)
+ggplot(data=data,mapping=aes(x=Total.doses.administered,y=X..of.population.fully.vaccinated))+geom_boxplot(notch = TRUE,outlier.colour = "green",outlier.size = 3)
+
+#combining
+plots<-list(plot1,plot2)
+layout<-rbind(c(1,2),c(3,4),c(5,5))
+grid.arrange(grobs=plots,layout_matrix=layout)
+
+#modify
+ggplot(data=data,mapping=aes(x=Total.doses.administered,y=X..of.population.vaccinated,colour=Doses.administered.per.100.people))+geom_point()+facet_grid(~X..of.population.fully.vaccinated)
